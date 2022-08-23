@@ -33,7 +33,7 @@ jobs:
             username: "Pull Request Build Status"
             text: |
               ${{ env.WORKFLOW_CONCLUSION }}:
-              https://github.com/Hichamraf/ComposeCICD/runs/${{ github.run_id }}
+              https://github.com/Hichamraf/ComposeCICD/actions/runs/${{ github.run_id }}
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
             SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TOKEN }}
