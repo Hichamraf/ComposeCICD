@@ -23,7 +23,7 @@ jobs:
 
       - uses: technote-space/workflow-conclusion-action@v1
       - uses: 8398a7/action-slack@v3
-          with:
+        with:
             status: ${{ env.WORKFLOW_CONCLUSION }}
             fields: commit,ref,workflow,eventName
             author_name: ${{ github.actor }}
@@ -32,7 +32,7 @@ jobs:
             text: |
               ${{ env.WORKFLOW_CONCLUSION }}:
               https://github.com/n8ebel/GitHubActionsAutomationSandbox/actions/runs/${{ github.run_id }}
-          env:
+        env:
             GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
             SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TOKEN }}
 
