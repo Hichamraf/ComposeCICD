@@ -35,7 +35,6 @@ fun Greeting(name: String) {
 @Composable
 fun DefaultPreview() {
     ComposeCICDTheme {
-
         Greeting("Android")
     }
 }
