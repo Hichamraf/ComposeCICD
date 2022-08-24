@@ -36,6 +36,13 @@ jobs:
           name: apk
           path: app/build/outputs/apk/debug/**.apk
 
+      - name: Upload Test Report
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-report
+          path: '**/build/reports/tests/'
+
 
       - uses: technote-space/workflow-conclusion-action@v1
       - name: Notify Slack
