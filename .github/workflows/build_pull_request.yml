@@ -22,7 +22,7 @@ jobs:
         run: ./gradlew testDebugUnitTest
 
       - name: Run Debug KtLint
-        run: ./gradlew ktlintDebugCheck
+        run: ./gradlew ktlintCheck
 
       - name: Run Debug Lint
         run: :/gradlew lintDebug
