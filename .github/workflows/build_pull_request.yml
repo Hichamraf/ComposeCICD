@@ -30,18 +30,18 @@ jobs:
       - name: Assemble Debug
         run: ./gradlew assembleDebug
 
-       - name: Upload Test report
-         if: ${{always()}}
-         uses: actions/upload-artificat@v2
-         with:
-            name: test-reports
-            path: '**/build/reports/tests/'
-
-       -name: Upload APK
+      - name: Upload Test report
+        if: ${{always()}}
         uses: actions/upload-artificat@v2
         with:
-           name: apk
-           path: app/build/outputs/apk/debug/**.apk
+         name: test-reports
+         path: '**/build/reports/tests/'
+
+      -name: Upload APK
+       uses: actions/upload-artificat@v2
+       with:
+          name: apk
+          path: app/build/outputs/apk/debug/**.apk
 
 
       - uses: technote-space/workflow-conclusion-action@v1
