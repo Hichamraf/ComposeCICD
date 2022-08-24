@@ -30,34 +30,21 @@ jobs:
       - name: Assemble Debug
         run: ./gradlew assembleDebug
 
-      - name: Upload Test report
-        if: ${{always()}}
-        uses: actions/upload-artificat@v2
-        with:
-         name: test-reports
-         path: '**/build/reports/tests/'
-
-      -name: Upload APK
-        uses: actions/upload-artificat@v2
-        with:
-          name: apk
-          path: app/build/outputs/apk/debug/**.apk
-
 
       - uses: technote-space/workflow-conclusion-action@v1
       - name: Notify Slack
         uses: 8398a7/action-slack@v3
         with:
-            status: ${{ env.WORKFLOW_CONCLUSION }}
-            fields: commit,ref,workflow,eventName
-            author_name: ${{ github.actor }}
-            icon_emoji: ':robot_face:'
-            username: "Pull Request Build Status"
-            text: |
-              ${{ env.WORKFLOW_CONCLUSION }}:
-              https://github.com/Hichamraf/ComposeCICD/actions/runs/${{ github.run_id }}
+          status: ${{ env.WORKFLOW_CONCLUSION }}
+          fields: commit,ref,workflow,eventName
+          author_name: ${{ github.actor }}
+          icon_emoji: ':robot_face:'
+          username: "Pull Request Build Status"
+          text: |
+            ${{ env.WORKFLOW_CONCLUSION }}:
+            https://github.com/Hichamraf/ComposeCICD/actions/runs/${{ github.run_id }}
         env:
-            GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
-            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TOKEN }}
 
 
