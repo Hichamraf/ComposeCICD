@@ -18,6 +18,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
+      - name: Run Debug Tests
+        run: ./gradlew testDebugUnitTest
+
+      - name: Run Debug KtLint
+        run: ./gradlew ktlintDebugCheck
+
+      - name: Run Debug Lint
+        run: :/gradlew lintDebug
+
       - name: Assemble Debug
         run: ./gradlew assembleDebug
 
