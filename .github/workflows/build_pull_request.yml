@@ -38,8 +38,8 @@ jobs:
          path: '**/build/reports/tests/'
 
       -name: Upload APK
-       uses: actions/upload-artificat@v2
-       with:
+        uses: actions/upload-artificat@v2
+        with:
           name: apk
           path: app/build/outputs/apk/debug/**.apk
 
