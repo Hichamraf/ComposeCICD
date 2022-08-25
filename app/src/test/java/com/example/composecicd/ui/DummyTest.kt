@@ -3,7 +3,6 @@ package com.example.composecicd.ui
 import org.junit.Assert
 import org.junit.Test
 
-
 class DummyTest {
     private val subject = Dummy()
 
