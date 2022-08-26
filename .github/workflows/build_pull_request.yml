@@ -1,8 +1,9 @@
 name: Build upon Pull Request
 on: pull_request
 jobs:
-  assemble_job:
-    name: Assemble
+  test_job:
+    continue-on-error: true
+    name: Unit Tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -21,12 +22,52 @@ jobs:
       - name: Run Debug Tests
         run: ./gradlew testDebugUnitTest
 
+      - name: Upload Test Report
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-report
+          path: '**/build/reports/tests/'
+
+  lint_job:
+    continue-on-error: true
+    name: Lint checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Restore Cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
       - name: Run Debug KtLint
         run: ./gradlew ktlintCheck
 
       - name: Run Debug Lint
         run: ./gradlew lintDebug
+  assemble_job:
+    continue-on-error: true
+    name: Assemble and upload apk
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
+      - name: Restore Cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
       - name: Assemble Debug
         run: ./gradlew assembleDebug
 
@@ -36,28 +77,27 @@ jobs:
           name: apk
           path: app/build/outputs/apk/debug/**.apk
 
-      - name: Upload Test Report
-        if: ${{ always() }}
-        uses: actions/upload-artifact@v2
-        with:
-          name: test-report
-          path: '**/build/reports/tests/'
 
 
+  notify_slack_job:
+    needs: [test_job, lint_job, assemble_job]
+    name: Notify build status
+    runs-on: ubuntu-latest
+    steps:
       - uses: technote-space/workflow-conclusion-action@v1
       - name: Notify Slack
-        uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ env.WORKFLOW_CONCLUSION }}
-          fields: commit,ref,workflow,eventName
-          author_name: ${{ github.actor }}
-          icon_emoji: ':robot_face:'
-          username: "Pull Request Build Status"
-          text: |
-            ${{ env.WORKFLOW_CONCLUSION }}:
-            https://github.com/Hichamraf/ComposeCICD/actions/runs/${{ github.run_id }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TOKEN }}
+       uses: 8398a7/action-slack@v3
+       with:
+        status: ${{ env.WORKFLOW_CONCLUSION }}
+        fields: commit,ref,workflow,eventName
+        author_name: ${{ github.actor }}
+        icon_emoji: ':robot_face:'
+        username: "Pull Request Build Status"
+        text: |
+          ${{ env.WORKFLOW_CONCLUSION }}:
+          https://github.com/Hichamraf/ComposeCICD/actions/runs/${{ github.run_id }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TOKEN }}
 
 
